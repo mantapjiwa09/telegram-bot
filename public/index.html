@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kirim OTP Telegram</title>
+</head>
+<body>
+    <h2>Masukkan Nomor HP Telegram</h2>
+    <input type="text" id="phone" placeholder="+62...">
+    <button onclick="sendOTP()">Kirim OTP</button>
+    <script>
+        async function sendOTP() {
+            const phone = document.getElementById('phone').value;
+            const res = await fetch('/send-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone })
+            });
+            const data = await res.json();
+            if (data.success) {
+                localStorage.setItem('phone', phone);
+                localStorage.setItem('phoneCodeHash', data.phoneCodeHash);
+                window.location.href = 'verify.html';
+            } else {
+                alert('Gagal mengirim OTP: ' + data.error);
+            }
+        }
+    </script>
+</body>
+</html>
